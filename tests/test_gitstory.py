@@ -53,3 +53,30 @@ class TestRender:
         assert "<h2>Sub</h2>" in result
         assert "<li>item</li>" in result
         assert 'class="breaking"' in result
+
+    def test_wrap_html_list_wrapping(self):
+        md = "- one\n- two\n- three"
+        result = _wrap_html(md)
+        assert "<ul>" in result
+        assert "</ul>" in result
+        assert result.count("<li>") == 3
+        # <li> elements must be inside a <ul>...</ul> block
+        ul_start = result.find("<ul>")
+        ul_end = result.find("</ul>")
+        li_start = result.find("<li>")
+        li_end = result.rfind("</li>")
+        assert ul_start < li_start < li_end < ul_end
+
+    def test_wrap_html_list_closes_on_blank(self):
+        md = "- a\n- b\n\nplain paragraph"
+        result = _wrap_html(md)
+        assert result.count("<ul>") == 1
+        assert result.count("</ul>") == 1
+        assert "<p>plain paragraph</p>" in result
+
+    def test_wrap_html_list_closes_on_heading(self):
+        md = "- a\n## Section\n- b"
+        result = _wrap_html(md)
+        # List closes before heading, then a new list opens after
+        assert result.count("<ul>") == 2
+        assert result.count("</ul>") == 2
