@@ -32,22 +32,22 @@ git story --since '1 week' --format plain | head -20
 ## Acceptance Criteria
 
 ### CLI (MVP)
-- [x] `git story` command (installed as `git-story` binary, also callable as `git story`)
-- [x] `--since` flag: time range (e.g. `1 week`, `2026-06-01`, `2 days ago`)
-- [x] `--until` flag: end time (default: now)
+- [x] `git story` command (installed as `git-story` binary)
+- [x] `--since` flag: time range
+- [x] `--until` flag: end time
 - [x] `--format` flag: `markdown` (default), `html`, `plain`
 - [x] `--model` flag: Ollama model name (default: `qwen3-coder`)
 - [x] `-o` / `--output`: write to file instead of stdout
-- [x] `--ollama-url`: custom Ollama server URL (default: `http://localhost:11434`)
+- [x] `--ollama-url`: custom Ollama server URL
 - [x] Fetches git log with author, date, message, and files changed
 - [x] Sends commit data to local Ollama for narrative generation
-- [x] Groups related changes into logical sections
+- [x] Groups related changes into logical sections (LLM-driven)
 - [x] Identifies breaking changes and highlights them
 - [x] Detects patterns (refactoring, bug fixes, features, deps)
 
 ### Output Quality
-- [x] Narrative reads like a human wrote it, not a bullet list
-- [x] Breaking changes called out with ⚠️ or similar marker
+- [x] Narrative reads like a human wrote it (LLM-generated)
+- [x] Breaking changes called out with ⚠️
 - [x] Empty/no commits in range returns a friendly message
 - [x] Respects `.git` directory boundaries (works in subdirs)
 
@@ -55,8 +55,11 @@ git story --since '1 week' --format plain | head -20
 - [x] Clear error if Ollama not running
 - [x] Clear error if no commits in range
 - [x] Progress indicator during LLM processing
-- [x] Verbose mode (`-v`) shows raw commit data sent to model
-- [x] Dry-run mode (`--dry-run`) shows commit data without calling Ollama
+- [x] Verbose mode (`-v`) shows raw commit data
+- [x] Dry-run mode (`--dry-run`) shows commits without LLM
+- [x] 6 unit tests passing
+- [x] CI workflow (GitHub Actions)
+- [x] pip installable
 
 ## Tech Stack
 - **Language:** Python 3.11+ (fastest path for Ollama API + git parsing)
