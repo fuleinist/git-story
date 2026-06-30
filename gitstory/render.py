@@ -35,21 +35,45 @@ def _wrap_html(markdown_text: str) -> str:
     escaped = html.escape(markdown_text)
     # Simple markdown-like conversion
     lines = []
+    in_list = False
     for line in escaped.split("\n"):
         if line.startswith("### "):
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append(f"<h3>{line[4:]}</h3>")
         elif line.startswith("## "):
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append(f"<h2>{line[3:]}</h2>")
         elif line.startswith("# "):
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append(f"<h1>{line[2:]}</h1>")
         elif line.startswith("- "):
+            if not in_list:
+                lines.append("<ul>")
+                in_list = True
             lines.append(f"<li>{line[2:]}</li>")
         elif line.startswith("⚠️ "):
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append(f'<p class="breaking">{line}</p>')
         elif line.strip() == "":
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append("<br>")
         else:
+            if in_list:
+                lines.append("</ul>")
+                in_list = False
             lines.append(f"<p>{line}</p>")
+    if in_list:
+        lines.append("</ul>")
 
     body = "\n".join(lines)
     return f"""<!DOCTYPE html>
